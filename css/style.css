@@ -14,3 +14,13 @@
 .button:hover {
     background: #F090B6;
 }
+
+body {
+	background-color:lightgrey
+	font-family: sans-serif;
+	text-align: center;
+}
+
+h1 {
+	font-weight: 300;
+}
