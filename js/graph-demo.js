@@ -105,7 +105,7 @@ window.onload = function () {
         nodes = makeArrayUnique(nodes);
         //Build unique nodes
         for (var j in nodes) {
-            var node = springyGraph.newNode({label: nodes[j]});
+            var node = springyGraph.newNode({colour: '#72a329', label: nodes[j]});
             nodesHash[nodes[j]] = node;
         }
         //Build edges

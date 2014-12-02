@@ -27,11 +27,11 @@
 
 	jQuery.fn.springy = function (params) {
 		var graph = this.graph = params.graph || new Springy.Graph();
-		var nodeFont = "16px Verdana, sans-serif";
-		var edgeFont = "8px Verdana, sans-serif";
-		var stiffness = params.stiffness || 400.0;
-		var repulsion = params.repulsion || 400.0;
-		var damping = params.damping || 0.5;
+		var nodeFont = "14px Verdana, sans-serif";
+		var edgeFont = "10px Verdana, sans-serif";
+		var stiffness = params.stiffness || 600.0;
+		var repulsion = params.repulsion || 300.0;
+		var damping = params.damping || 0.25;
 		var nodeSelected = params.nodeSelected || null;
 		var nodeImages = {};
 
@@ -84,7 +84,7 @@
 			selected = nearest = dragged = layout.nearest(p);
 
 			if (selected.node !== null) {
-				dragged.point.m = 10000.0;
+				dragged.point.m = 1000.0;
 
 				if (nodeSelected) {
 					nodeSelected(selected.node);
@@ -139,7 +139,7 @@
 		};
 
 		var getTextHeight = function (node) {
-			return 16;
+			return 14;
 			// In a more modular world, this would actually read the font size, but I think leaving it a constant is sufficient for now.
 			// If you change the font size, I'd adjust this too.
 		};
@@ -162,7 +162,7 @@
 				if (this.data.image.src in nodeImages && nodeImages[this.data.image.src].loaded) {
 					height = getImageHeight(this);
 				} else {
-					height = 10;
+					height = 9;
 				}
 			}
 			return height;
@@ -208,8 +208,8 @@
 					}
 				}
 
-				//change default to  10.0 to allow text fit between edges
-				var spacing = 12.0;
+				//change default to 10.0 to allow text fit between edges
+				var spacing = 24.0;
 
 				// Figure out how far off center the line should be drawn
 				var offset = normal.multiply(-((total - 1) * spacing) / 2.0 + (n * spacing));
@@ -281,6 +281,7 @@
 					ctx.save();
 					ctx.textAlign = "center";
 					ctx.textBaseline = "top";
+					ctx.padding = 5.0;
 					ctx.font = (edge.data.font !== undefined) ? edge.data.font : edgeFont;
 					ctx.fillStyle = stroke;
 					var textPos = s1.add(s2).divide(2).add(normal.multiply(-8));
@@ -328,7 +329,7 @@
 					ctx.fillText(text, s.x - contentWidth / 2, s.y - contentHeight / 2);
 				} else {
 					// Currently we just ignore any labels if the image object is set. One might want to extend this logic to allow for both, or other composite nodes.
-					var src = node.data.image.src;  // There should probably be a sanity check here too, but un-src-ed images aren't exaclty a disaster.
+					var src = node.data.image.src;  // There should probably be a sanity check here too, but un-src-ed images aren't exactly a disaster.
 					if (src in nodeImages) {
 						if (nodeImages[src].loaded) {
 							// Our image is loaded, so it's safe to draw
