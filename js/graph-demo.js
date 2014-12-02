@@ -113,8 +113,9 @@ window.onload = function () {
             processLDObjectForEdges(graph[l]);
         }
         for (var k in edges) {
-            springyGraph.newEdge(nodesHash[edges[k][0]], nodesHash[edges[k][1]], edges[k][2]);
+            var edge = springyGraph.newEdge(nodesHash[edges[k][0]], nodesHash[edges[k][1]], edges[k][2]);
         }
+        springyGraph.addEdge(edge);
     }
 
     function processLDObjectForNodes(object) {
@@ -138,11 +139,11 @@ window.onload = function () {
                 continue;
                 //Recurse through nested object
             } else if (obj instanceof Object) {
-                edges.push([subject, obj["@id"], {label: predicate}]);
+                edges.push([subject, obj["@id"], {directional: true, label: predicate}]);
                 processLDObjectForEdges(obj);
                 continue;
             }
-            edges.push([subject, obj, {label: predicate}]);
+            edges.push([subject, obj, {directional: true, label: predicate}]);
         }
     }
 

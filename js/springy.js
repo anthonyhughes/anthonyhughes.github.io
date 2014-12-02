@@ -1,7 +1,7 @@
 /**
  * Springy v2.0.1
  *
- * Copyright (c) 2010 Dennis Hotson
+ * Copyright (c) 2010-2013 Dennis Hotson
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -45,6 +45,8 @@
 		this.nodeSet = {};
 		this.nodes = [];
 		this.edges = [];
+		this.adjacency = {};
+
 		this.nextNodeId = 0;
 		this.nextEdgeId = 0;
 		this.eventListeners = [];
@@ -53,9 +55,11 @@
 	var Node = Springy.Node = function(id, data) {
 		this.id = id;
 		this.data = (data !== undefined) ? data : {};
-        this.color = '#ffffff';
-        this.out = []; // outgoing edge
-        this.current = false;
+
+		// Data fields used by layout algorithm in this file:
+		// this.data.mass
+		// Data used by default renderer in springyui.js
+		// this.data.label
 	};
 
 	var Edge = Springy.Edge = function(id, source, target, data) {
@@ -63,18 +67,32 @@
 		this.source = source;
 		this.target = target;
 		this.data = (data !== undefined) ? data : {};
-        this.color = '#ededed';
+
+		// Edge data field used by layout alorithm
+		// this.data.length
+		// this.data.type
 	};
 
 	Graph.prototype.addNode = function(node) {
 		if (!(node.id in this.nodeSet)) {
 			this.nodes.push(node);
 		}
+
 		this.nodeSet[node.id] = node;
+
 		this.notify();
 		return node;
 	};
 
+	Graph.prototype.addNodes = function () {
+		// accepts variable number of arguments, where each argument
+		// is a string that becomes both node identifier and label
+		for (var i = 0; i < arguments.length; i++) {
+			var name = arguments[i];
+			var node = new Node(name, {label: name});
+			this.addNode(node);
+		}
+	};
 
 	Graph.prototype.addEdge = function(edge) {
 		var exists = false;
@@ -84,53 +102,28 @@
 
 		if (!exists) {
 			this.edges.push(edge);
-            this.nodes[edge.source.id].out.push(edge.target.id);
 		}
 
+		if (!(edge.source.id in this.adjacency)) {
+			this.adjacency[edge.source.id] = {};
+		}
+		if (!(edge.target.id in this.adjacency[edge.source.id])) {
+			this.adjacency[edge.source.id][edge.target.id] = [];
+		}
+
+		exists = false;
+		this.adjacency[edge.source.id][edge.target.id].forEach(function (e) {
+			if (edge.id === e.id) {
+				exists = true;
+			}
+		});
+
+		if (!exists) {
+			this.adjacency[edge.source.id][edge.target.id].push(edge);
+		}
 
 		this.notify();
 		return edge;
-	};
-    
-
-    Graph.prototype.getEdge = function(source, target) {
-        var edge = undefined;
-		this.edges.forEach(function(e) {
-			if (source == e.source.id && target == e.target.id) {
-                edge = e;
-            }
-		});
-
-	    return edge;
-
-	};
-
-    Graph.prototype.setEdgeColor = function(source, target, color) {
-		this.edges.forEach(function(e) {
-			if (source == e.source.id && target == e.target.id) {
-                e.color = color
-            }
-		});
-
-
-	};
-
-
-
-	Graph.prototype.newNode = function(data) {
-		var node = new Node(this.nextNodeId++, data);
-		this.addNode(node);
-		return node;
-	};
-
-	Graph.prototype.addNodes = function() {
-		// accepts variable number of arguments, where each argument
-		// is a string that becomes both node identifier and label
-		for (var i = 0; i < arguments.length; i++) {
-			var name = arguments[i];
-			var node = new Node(name);
-			this.addNode(node);
-		}
 	};
 
 	Graph.prototype.addEdges = function() {
@@ -152,6 +145,11 @@
 		}
 	};
 
+	Graph.prototype.newNode = function (data) {
+		var node = new Node(this.nextNodeId++, data);
+		this.addNode(node);
+		return node;
+	};
 
 	Graph.prototype.newEdge = function(source, target, data) {
 		var edge = new Edge(this.nextEdgeId++, source, target, data);
@@ -160,18 +158,161 @@
 	};
 
 
-    // add nodes and edges from JSON object
+	// add nodes and edges from JSON object
 	Graph.prototype.loadJSON = function(json) {
+		/**
+		 Springy's simple JSON format for graphs.
+
+		 historically, Springy uses separate lists
+		 of nodes and edges:
+
+		 {
+            "nodes": [
+                "center",
+                "left",
+                "right",
+                "up",
+                "satellite"
+            ],
+            "edges": [
+                ["center", "left"],
+                ["center", "right"],
+                ["center", "up"]
+            ]
+        }
+
+		 **/
+		// parse if a string is passed (EC5+ browsers)
 		if (typeof json == 'string' || json instanceof String) {
-            json = JSON.parse(json);
+			json = JSON.parse(json);
 		}
 
 		if ('nodes' in json || 'edges' in json) {
 			this.addNodes.apply(this, json['nodes']);
 			this.addEdges.apply(this, json['edges']);
 		}
+	}
+
+
+	// find the edges from node1 to node2
+	Graph.prototype.getEdges = function (node1, node2) {
+		if (node1.id in this.adjacency
+			&& node2.id in this.adjacency[node1.id]) {
+			return this.adjacency[node1.id][node2.id];
+		}
+
+		return [];
 	};
 
+	// remove a node and it's associated edges from the graph
+	Graph.prototype.removeNode = function (node) {
+		if (node.id in this.nodeSet) {
+			delete this.nodeSet[node.id];
+		}
+
+		for (var i = this.nodes.length - 1; i >= 0; i--) {
+			if (this.nodes[i].id === node.id) {
+				this.nodes.splice(i, 1);
+			}
+		}
+
+		this.detachNode(node);
+	};
+
+	// removes edges associated with a given node
+	Graph.prototype.detachNode = function (node) {
+		var tmpEdges = this.edges.slice();
+		tmpEdges.forEach(function (e) {
+			if (e.source.id === node.id || e.target.id === node.id) {
+				this.removeEdge(e);
+			}
+		}, this);
+
+		this.notify();
+	};
+
+	// remove a node and it's associated edges from the graph
+	Graph.prototype.removeEdge = function (edge) {
+		for (var i = this.edges.length - 1; i >= 0; i--) {
+			if (this.edges[i].id === edge.id) {
+				this.edges.splice(i, 1);
+			}
+		}
+
+		for (var x in this.adjacency) {
+			for (var y in this.adjacency[x]) {
+				var edges = this.adjacency[x][y];
+
+				for (var j = edges.length - 1; j >= 0; j--) {
+					if (this.adjacency[x][y][j].id === edge.id) {
+						this.adjacency[x][y].splice(j, 1);
+					}
+				}
+
+				// Clean up empty edge arrays
+				if (this.adjacency[x][y].length == 0) {
+					delete this.adjacency[x][y];
+				}
+			}
+
+			// Clean up empty objects
+			if (isEmpty(this.adjacency[x])) {
+				delete this.adjacency[x];
+			}
+		}
+
+		this.notify();
+	};
+
+	/* Merge a list of nodes and edges into the current graph. eg.
+	 var o = {
+	 nodes: [
+	 {id: 123, data: {type: 'user', userid: 123, displayname: 'aaa'}},
+	 {id: 234, data: {type: 'user', userid: 234, displayname: 'bbb'}}
+	 ],
+	 edges: [
+	 {from: 0, to: 1, type: 'submitted_design', directed: true, data: {weight: }}
+	 ]
+	 }
+	 */
+	Graph.prototype.merge = function (data) {
+		var nodes = [];
+		data.nodes.forEach(function (n) {
+			nodes.push(this.addNode(new Node(n.id, n.data)));
+		}, this);
+
+		data.edges.forEach(function (e) {
+			var from = nodes[e.from];
+			var to = nodes[e.to];
+
+			var id = (e.directed)
+				? (id = e.type + "-" + from.id + "-" + to.id)
+				: (from.id < to.id) // normalise id for non-directed edges
+				? e.type + "-" + from.id + "-" + to.id
+				: e.type + "-" + to.id + "-" + from.id;
+
+			var edge = this.addEdge(new Edge(id, from, to, e.data));
+			edge.data.type = e.type;
+		}, this);
+	};
+
+	Graph.prototype.filterNodes = function (fn) {
+		var tmpNodes = this.nodes.slice();
+		tmpNodes.forEach(function (n) {
+			if (!fn(n)) {
+				this.removeNode(n);
+			}
+		}, this);
+	};
+
+	Graph.prototype.filterEdges = function (fn) {
+		var tmpEdges = this.edges.slice();
+		tmpEdges.forEach(function (e) {
+			if (!fn(e)) {
+				this.removeEdge(e);
+			}
+		}, this);
+	};
 
 
 	Graph.prototype.addGraphListener = function(obj) {
@@ -198,7 +339,7 @@
 
 	Layout.ForceDirected.prototype.point = function(node) {
 		if (!(node.id in this.nodePoints)) {
-			var mass = (node.mass !== undefined) ? node.mass : 1.0;
+			var mass = (node.data.mass !== undefined) ? node.data.mass : 2.0;
 			this.nodePoints[node.id] = new Layout.ForceDirected.Point(Vector.random(), mass);
 		}
 
@@ -207,9 +348,27 @@
 
 	Layout.ForceDirected.prototype.spring = function(edge) {
 		if (!(edge.id in this.edgeSprings)) {
-			var length = (edge.length !== undefined) ? edge.length : 1.0;
+			var length = (edge.data.length !== undefined) ? edge.data.length : 1.0;
 
 			var existingSpring = false;
+
+			var from = this.graph.getEdges(edge.source, edge.target);
+			from.forEach(function (e) {
+				if (existingSpring === false && e.id in this.edgeSprings) {
+					existingSpring = this.edgeSprings[e.id];
+				}
+			}, this);
+
+			if (existingSpring !== false) {
+				return new Layout.ForceDirected.Spring(existingSpring.point1, existingSpring.point2, 0.0, 0.0);
+			}
+
+			var to = this.graph.getEdges(edge.target, edge.source);
+			from.forEach(function (e) {
+				if (existingSpring === false && e.id in this.edgeSprings) {
+					existingSpring = this.edgeSprings[e.id];
+				}
+			}, this);
 
 			if (existingSpring !== false) {
 				return new Layout.ForceDirected.Spring(existingSpring.point2, existingSpring.point1, 0.0, 0.0);
@@ -248,8 +407,6 @@
 	};
 
 
-    
-
 	// Physics stuff
 	Layout.ForceDirected.prototype.applyCoulombsLaw = function() {
 		this.eachNode(function(n1, point1) {
@@ -257,12 +414,12 @@
 				if (point1 !== point2)
 				{
 					var d = point1.p.subtract(point2.p);
-					var distance = d.magnitude() + 0.1; // avoid massive forces at small distances (and divide by zero)
+					var distance = d.magnitude() + 0.2; // avoid massive forces at small distances (and divide by zero)
 					var direction = d.normalise();
 
 					// apply force to each end point
-					point1.applyForce(direction.multiply(this.repulsion).divide(distance * distance * 0.5));
-					point2.applyForce(direction.multiply(this.repulsion).divide(distance * distance * -0.5));
+					point1.applyForce(direction.multiply(this.repulsion).divide(distance * distance * 1));
+					point2.applyForce(direction.multiply(this.repulsion).divide(distance * distance * -1));
 				}
 			});
 		});
@@ -275,8 +432,8 @@
 			var direction = d.normalise();
 
 			// apply force to each end point
-			spring.point1.applyForce(direction.multiply(spring.k * displacement * -0.5));
-			spring.point2.applyForce(direction.multiply(spring.k * displacement * 0.5));
+			spring.point1.applyForce(direction.multiply(spring.k * displacement * -1));
+			spring.point2.applyForce(direction.multiply(spring.k * displacement * 1));
 		});
 	};
 
@@ -319,22 +476,29 @@
 	var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }; // stolen from coffeescript, thanks jashkenas! ;-)
 
 	Springy.requestAnimationFrame = __bind(root.requestAnimationFrame ||
-		root.webkitRequestAnimationFrame ||
-		root.mozRequestAnimationFrame ||
-		root.oRequestAnimationFrame ||
-		root.msRequestAnimationFrame ||
-		(function(callback, element) {
-			root.setTimeout(callback, 10);
-		}), root);
+	root.webkitRequestAnimationFrame ||
+	root.mozRequestAnimationFrame ||
+	root.oRequestAnimationFrame ||
+	root.msRequestAnimationFrame ||
+	(function (callback, element) {
+		root.setTimeout(callback, 10);
+	}), root);
 
 
-	// start simulation
-	Layout.ForceDirected.prototype.start = function(render, done) {
+	/**
+	 * Start simulation if it's not running already.
+	 * In case it's running then the call is ignored, and none of the callbacks passed is ever executed.
+	 */
+	Layout.ForceDirected.prototype.start = function (render, onRenderStop, onRenderStart) {
 		var t = this;
 
 		if (this._started) return;
 		this._started = true;
 		this._stop = false;
+
+		if (onRenderStart !== undefined) {
+			onRenderStart();
+		}
 
 		Springy.requestAnimationFrame(function step() {
 			t.applyCoulombsLaw();
@@ -350,9 +514,11 @@
 			// stop simulation when energy of the system goes below a threshold
 			if (t._stop || t.totalEnergy() < 0.01) {
 				t._started = false;
-				if (done !== undefined) { done(); }
+				if (onRenderStop !== undefined) {
+					onRenderStop();
+				}
 			} else {
-				Springy.requestAnimationFrame(step);  //recursive
+				Springy.requestAnimationFrame(step);
 			}
 		});
 	};
@@ -383,7 +549,6 @@
 		var topright = new Vector(2,2);
 
 		this.eachNode(function(n, point) {
-       
 			if (point.p.x < bottomleft.x) {
 				bottomleft.x = point.p.x;
 			}
@@ -398,7 +563,7 @@
 			}
 		});
 
-		var padding = topright.subtract(bottomleft).multiply(0.1).add(new Vector(0, 0.3)); // some padding
+		var padding = topright.subtract(bottomleft).multiply(0.07); // ~5% padding
 
 		return {bottomleft: bottomleft.subtract(padding), topright: topright.add(padding)};
 	};
@@ -471,12 +636,18 @@
 	// 	return Math.abs(ac.x * n.x + ac.y * n.y);
 	// };
 
-	// Renderer handles the layout rendering loop
-	var Renderer = Springy.Renderer = function(layout, clear, drawEdge, drawNode) {
+	/**
+	 * Renderer handles the layout rendering loop
+	 * @param onRenderStop optional callback function that gets executed whenever rendering stops.
+	 * @param onRenderStart optional callback function that gets executed whenever rendering starts.
+	 */
+	var Renderer = Springy.Renderer = function (layout, clear, drawEdge, drawNode, onRenderStop, onRenderStart) {
 		this.layout = layout;
 		this.clear = clear;
 		this.drawEdge = drawEdge;
 		this.drawNode = drawNode;
+		this.onRenderStop = onRenderStop;
+		this.onRenderStart = onRenderStart;
 
 		this.layout.graph.addGraphListener(this);
 	}
@@ -485,7 +656,17 @@
 		this.start();
 	};
 
-	Renderer.prototype.start = function() {
+	/**
+	 * Starts the simulation of the layout in use.
+	 *
+	 * Note that in case the algorithm is still or already running then the layout that's in use
+	 * might silently ignore the call, and your optional <code>done</code> callback is never executed.
+	 * At least the built-in ForceDirected layout behaves in this way.
+	 *
+	 * @param done An optional callback function that gets executed when the springy algorithm stops,
+	 * either because it ended or because stop() was called.
+	 */
+	Renderer.prototype.start = function (done) {
 		var t = this;
 		this.layout.start(function render() {
 			t.clear();
@@ -495,10 +676,9 @@
 			});
 
 			t.layout.eachNode(function(node, point) {
-
 				t.drawNode(node, point.p);
 			});
-		});
+		}, this.onRenderStart, this.onRenderStop);
 	};
 
 	Renderer.prototype.stop = function() {
