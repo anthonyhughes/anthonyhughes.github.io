@@ -27,8 +27,8 @@
 
 	jQuery.fn.springy = function (params) {
 		var graph = this.graph = params.graph || new Springy.Graph();
-		var nodeFont = "14px Verdana, sans-serif";
-		var edgeFont = "10px Verdana, sans-serif";
+		var nodeFont = "14px Verdana, Raleway";
+		var edgeFont = "10px Verdana, Raleway";
 		var stiffness = params.stiffness || 600.0;
 		var repulsion = params.repulsion || 300.0;
 		var damping = params.damping || 0.25;
@@ -240,8 +240,8 @@
 				var weight = (edge.data.weight !== undefined) ? edge.data.weight : 1.0;
 
 				ctx.lineWidth = Math.max(weight * 2, 0.1);
-				arrowWidth = 1 + ctx.lineWidth;
-				arrowLength = 8;
+				arrowWidth = 2 + ctx.lineWidth;
+				arrowLength = 6;
 
 				var directional = (edge.data.directional !== undefined) ? edge.data.directional : true;
 
@@ -281,13 +281,12 @@
 					ctx.save();
 					ctx.textAlign = "center";
 					ctx.textBaseline = "top";
-					ctx.padding = 5.0;
 					ctx.font = (edge.data.font !== undefined) ? edge.data.font : edgeFont;
 					ctx.fillStyle = stroke;
 					var textPos = s1.add(s2).divide(2).add(normal.multiply(-8));
 					ctx.translate(textPos.x, textPos.y);
 					ctx.rotate(Math.atan2(s2.y - s1.y, s2.x - s1.x));
-					ctx.fillText(text, 0, -2);
+					ctx.fillText(text, 0, -6);
 					ctx.restore();
 				}
 
