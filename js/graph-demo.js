@@ -14,7 +14,7 @@ window.onload = function () {
         "@graph": [
             {
                 "@type": "http://data.cochrane.org/ontologies/pico/Drug",
-                "label": "5 Ml Isoproterenol Hydrochloride 0.2 Mg/ml Prefilled Syringe",
+                "label": "5 Ml Isoproterenol Hydrochloride",
                 "broaderConcept": {
                     "label": "Respiratory System",
                     "@id": "http://data.cochrane.org/concept/21605007"
@@ -27,7 +27,7 @@ window.onload = function () {
             },
             {
                 "@type": "http://data.cochrane.org/ontologies/pico/Drug",
-                "label": "300 Actuat Isoproterenol Hydrochloride 0.16 Mg/actuat / Phenylephrine Bitartrate 0.24 Mg/actuat Metered Dose Inhaler",
+                "label": "300 Actuat Isoproterenol Hydrochloride",
                 "broaderConcept": {
                     "label": "Sympathomimetics, Combos Excl. Corticosteroids",
                     "@id": "http://data.cochrane.org/concept/21605024"
@@ -40,7 +40,7 @@ window.onload = function () {
             },
             {
                 "@type": "http://data.cochrane.org/ontologies/pico/Drug",
-                "label": "300 Actuat Isoproterenol Sulfate 0.08 Mg/actuat Metered Dose Inhaler",
+                "label": "300 Actuat Isoproterenol Sulfate",
                 "broaderConcept": {
                     "label": "Drugs For Obstructive Airway Diseases",
                     "@id": "http://data.cochrane.org/concept/21603248"
@@ -53,7 +53,7 @@ window.onload = function () {
             },
             {
                 "@type": "http://data.cochrane.org/ontologies/pico/Drug",
-                "label": "300 Actuat Isoproterenol Sulfate 0.08 Mg/actuat Metered Dose Inhaler [medihaler-iso]",
+                "label": "300 Actuat Isoproterenol Sulfate [medihaler-iso]",
                 "broaderConcept": {
                     "label": "Respiratory System",
                     "@id": "http://data.cochrane.org/concept/21605007"
@@ -79,12 +79,6 @@ window.onload = function () {
             }
         ]
     };
-    //var test = {
-    //    "nodes": [0, 1, 2, 3],
-    //    "edges": [
-    //        [0, 1, {weight: 1}],
-    //        [1, 2, {weight: 2}],
-    //        [2, 3, {weight: 3}]]};
 
     var edges = [];
     var nodes = [];
@@ -113,7 +107,14 @@ window.onload = function () {
             processLDObjectForEdges(graph[l]);
         }
         for (var k in edges) {
-            var edge = springyGraph.newEdge(nodesHash[edges[k][0]], nodesHash[edges[k][1]], edges[k][2]);
+            var subject = nodesHash[edges[k][0]];
+            var object = nodesHash[edges[k][1]];
+            var predicate = edges[k][2];
+            //If the edge doesn't already exist then add to graph
+            if (!doesEdgeAlreadyExists(subject, object, predicate)) {
+                var edge = springyGraph.newEdge(subject, object, predicate);
+            }
+
         }
         springyGraph.addEdge(edge);
     }
@@ -155,6 +156,19 @@ window.onload = function () {
 
     function displaySpringy() {
         $('#graph').springy({graph: springyGraph});
+    }
+
+    function doesEdgeAlreadyExists(subj, obj, predicate) {
+        var edges = springyGraph.getEdges(subj, obj);
+        if (edges.length == 0) {
+            return false;
+        } else {
+            for (var edge in edges) {
+                if (edges[edge].data.label == predicate.label) {
+                    return true;
+                }
+            }
+        }
     }
 
 };
