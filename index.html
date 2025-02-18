@@ -58,55 +58,40 @@
                     </p>
                 </div>
                 <p class="lead mb-1">
-                    I'm a PhD candidate at the University of Sheffield, researching AI methodolgies for speech and
-                    language technologies.
+                    I'm a PhD candidate at the University of Sheffield, researching AI methodologies with a focus on
+                    privacy-preserving, adaptive, and collaborative systems.
                 </p>
                 <p class="lead">
-                    My focus is on continual learning and meta-learning, "<i>learning to learn</i>", for multimodal
-                    systems with a focus on healthcare applications.
+                    My work explores continual learning, and the role of autonomous agents in multimodal AI, with an
+                    emphasis on privacy-conscious and decentralized approaches.
                 </p>
                 <p class="lead">
-                    PhD Summary - <button onclick="myFunction()">Show/Hide</button>
+                    PhD Summary - <button onclick="myFunction('summary')">Show/Hide</button>
+                </p>
                 <div id="summary" style="display: none;">
                     <p>
-                        Artificial intelligence (AI) has exploded into the mainstream in recent years, paving the way
-                        for
-                        the development of large language models (LLM) and large multimodal models (MM).
-                        These models are allowing for new and innovative ways of tackling societal problems. This
-                        increased
-                        use of LLMs and MMs is having a great influence in healthcare in many applications,
-                        including prediction of patient outcomes, medical decision making, and the potential to fuse and
-                        infer over a multitude of patient signals.
-                        Consequently, the critical and high-impact nature of this environment is fuelling the need for a
-                        model's ability to detect and adapt to adversarial behaviours over time.
+                        Advances in artificial intelligence have led to powerful large language models (LLMs) and large
+                        multimodal models (MMs), enabling new ways to process sensitive and complex information.
+                        However, their reliance on static, centralized data raises concerns regarding privacy,
+                        adaptability, and long-term alignment with dynamic environments.
                     </p>
                     <p>
-                        Great strides have been made in incorporating LLMs into a healthcare setting.
-                        These sophisticated models now possess the ability to surpass human performance in tasks such as
-                        medical exams.
-                        However, LLM training processes that focus on generalising across a particular data distribution
-                        from a particular point in time are a cause for concern.
-                        This style of model training is static, consequently paving the way for models that could become
-                        misaligned with the environment in which they operate.
-                        In this project, we look to learn and build mechanisms for combating a model's misalignment,
-                        helping
-                        models to continually learn.
+                        My research focuses on building AI systems that can continually learn and adapt over time,
+                        minimizing catastrophic forgetting while maintaining privacy and security.
+                        I explore decentralized and federated learning approaches, allowing models to improve
+                        collaboratively across distributed networks while respecting data privacy constraints.
+                        These methods are particularly crucial in sensitive domains like healthcare, where ensuring
+                        security and trust in AI-driven decision-making is paramount.
                     </p>
                     <p>
-                        The multimodal nature of medicine requires the development of MMs in order to process and
-                        interpret
-                        multiple types of data.
-                        In collaboration with local healthcare organisations, this PhD project is aimed at harnessing
-                        the
-                        potential of LLMs and MMs in the medical domain to improve healthcare outcomes, enhance patient
-                        care, and assist healthcare professionals.
-                        It will in particular focus on how LLMs and MMs can be adopted to handle and interpret the
-                        highly
-                        granular data in medicine while ensuring the models remain robust to data changes and task
-                        changes
-                        over periods of time.
+                        In healthcare, multimodal AI systems must handle a diverse range of data. My research
+                        investigates how autonomous AI agents can operate within sensitive settings, learning from
+                        multiple sources while remaining robust to shifts in data and tasks.
+                        By fostering collaborative intelligence, we aim to create AI systems that are interpretable,
+                        adaptable, and aligned with real-world needs without compromising individual privacy.
                     </p>
                 </div>
+
                 </p>
                 <div class="social-icons">
                     <a class="social-icon" href="https://www.linkedin.com/in/anthonyyhughes/" target="_blank"><i
@@ -125,9 +110,19 @@
             <h2 class="mb-5">Publications</h2>
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
-                    <div class="subheading mb-10">Understanding Inflicted Injuries in Young Children: Toward an Ontology-based Approach</div>
-                    <p>Maikore, F., Mazumdar, S. Offiah, A., <b>Hughes, A.</b>, Roychowdhury, S., Hocking, K., Lanfranchi, V.<b> 2024, Nov</b>.</p>
-                    <a href="https://event.cwi.nl/ekaw2024/accepted-papers.html" target="_blank">Understanding Inflicted Injuries in Young Children: Toward an Ontology-based Approach</a>
+                    <div class="subheading mb-10">How Private are Language Models in Abstractive Summarization?</div>
+                    <p><b>Hughes, A.</b>, Aletras, N., Ma, N.<b> 2024, Dec</b>.</p>
+                    <a href="https://arxiv.org/pdf/2412.12040" target="_blank">Preprint</a>
+                </div>
+            </div>
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <div class="subheading mb-10">Understanding Inflicted Injuries in Young Children: Toward an
+                        Ontology-based Approach</div>
+                    <p>Maikore, F., Mazumdar, S. Offiah, A., <b>Hughes, A.</b>, Roychowdhury, S., Hocking, K.,
+                        Lanfranchi, V.<b> 2024, Nov</b>.</p>
+                    <a href="https://event.cwi.nl/ekaw2024/accepted-papers.html" target="_blank">Understanding Inflicted
+                        Injuries in Young Children: Toward an Ontology-based Approach</a>
                     International Conference on Knowledge Engineering and Knowledge Management (EKAW 2024).
                 </div>
             </div>
@@ -136,12 +131,16 @@
                     <div class="subheading mb-10">Identifying and Aligning Medical Claims Made on Social Media with
                         Medical Evidence</div>
                     <p><b>Hughes, A.</b>, Song, X.<b> 2024, May</b>.</p>
-                    <a href="https://aclanthology.org/2024.lrec-main.753/" target="_blank">Identifying and Aligning Medical Claims Made on Social Media with
+                    <a href="https://aclanthology.org/2024.lrec-main.753/" target="_blank">Identifying and Aligning
+                        Medical Claims Made on Social Media with
                         Medical Evidence</a>
                     Proceedings of the Joint International Conference on Computational Linguistics, Language
                     Resources and Evaluation (LREC-COLING 2024).
                 </div>
             </div>
+            <button onclick="myFunction('pubs')">More/Less</button>
+        </div>
+        <div id="pubs" style="display: none;">
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
                     <div class="subheading mb-10">Generative Byte-Level Models for Restoring Spaces, Punctuation,
@@ -186,6 +185,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </section>
     <!-- Talks -->

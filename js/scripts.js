@@ -33,8 +33,8 @@ window.addEventListener('DOMContentLoaded', event => {
 
 });
 
-function myFunction() {
-    var x = document.getElementById("summary");
+function myFunction(element) {
+    var x = document.getElementById(element);
     if (x.style.display === "none") {
       x.style.display = "block";
     } else {
