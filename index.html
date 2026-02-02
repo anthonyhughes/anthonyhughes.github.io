@@ -18,6 +18,39 @@
             min-height: 100vh;
         }
 
+        header {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+        }
+
+        .header-content {
+            flex: 1;
+        }
+
+        .profile-photo {
+            flex-shrink: 0;
+            width: 180px;
+            height: 180px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            font-weight: 600;
+        }
+
+        .profile-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         h1 {
             font-size: 2rem;
             font-weight: 600;
@@ -181,6 +214,20 @@
             body {
                 padding: 20px 15px;
             }
+
+            header {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .profile-photo {
+                width: 150px;
+                height: 150px;
+            }
+
+            .header-content {
+                text-align: center;
+            }
             
             .nav a {
                 display: block;
@@ -196,50 +243,56 @@
 </head>
 <body>
     <header>
-        <h1>Anthony Hughes</h1>
-        <div class="subtitle">PhD Student, Computer Science</div>
-        <div class="affiliation"><a href="https://www.sheffield.ac.uk/">University of Sheffield</a></div>
-        <div class="contact">ajhughes3 at sheffield.ac.uk</div>
-        
-        <div class="social-links">
-            <a href="https://scholar.google.com/citations?user=5uAqgwIAAAAJ&hl=en" target="_blank">[Google Scholar]</a>
-            <a href="https://github.com/anthonyhughes" target="_blank">[GitHub]</a>
-            <a href="https://twitter.com/anthonyhughes" target="_blank">[Twitter]</a>
-            <a href="https://www.linkedin.com/in/anthony-hughes" target="_blank">[LinkedIn]</a>
+        <div class="profile-photo">
+            <img src="me.jpg" alt="Anthony Hughes">
         </div>
+        <div class="header-content">
+            <h1>Anthony Hughes</h1>
+            <div class="subtitle">PhD Student, Computer Science</div>
+            <div class="affiliation"><a href="https://www.sheffield.ac.uk/">University of Sheffield</a></div>
+            <div class="contact">ajhughes3 at sheffield.ac.uk</div>
+            
+            <div class="social-links">
+                <a href="https://scholar.google.com/citations?user=5uAqgwIAAAAJ&hl=en" target="_blank">[Google Scholar]</a>
+                <a href="https://github.com/anthonyhughes" target="_blank">[GitHub]</a>
+                <a href="https://twitter.com/anthonyhughes" target="_blank">[Twitter]</a>
+                <a href="https://www.linkedin.com/in/anthony-hughes" target="_blank">[LinkedIn]</a>
+            </div>
 
-        <nav class="nav">
-            <a href="#" class="active">Home</a>
-            <a href="#publications">Publications</a>
-            <a href="#experience">Experience</a>
-            <a href="#education">Education</a>
-            <a href="anthony_hughes_cv.pdf">CV</a>
-        </nav>
+            <nav class="nav">
+                <a href="#" class="active">Home</a>
+                <a href="#publications">Publications</a>
+                <a href="#experience">Experience</a>
+                <a href="#education">Education</a>
+                <a href="anthony_hughes_cv.pdf">CV</a>
+            </nav>
+        </div>
     </header>
 
     <main>
         <div class="intro">
-            <p>I am pursuing my Ph.D. in Computer Science at the <a href="https://www.sheffield.ac.uk/">University of Sheffield</a>. I am funded through a competitive UKRI PhD scholarship.</p>
+            <p>I am pursuing my Ph.D. in Computer Science at the <a href="https://www.sheffield.ac.uk/">University of Sheffield</a>.</p>
             
-            <p><strong>Research:</strong> I bridge the gap between AI research and real-world deployment through a unique combination of 11+ years in software engineering and research in AI safety. My PhD research investigates privacy in language models using mechanistic interpretability techniques to understand how models leak sensitive information during inference.</p>
+            <p><strong>Research:</strong>My PhD research investigates privacy in deep learning (DL), in particular how DL models leak sensitive information at inference time.</p>
             
-            <p><strong>Recent work:</strong> My EMNLP 2025 main paper investigates private summarisation, and I am currently using circuit interpretability techniques to understand fundamental mechanisms by which language models process and potentially expose private information.</p>
+            <p><strong>Recent work:</strong> My EMNLP 2025 paper investigates privacy-aware summarisation. A recent sumbission uses circuit discovery to understand weakness in existing PII leakage defenses. Currently working on how mech interp can be extended to a range of attack vectors</p>
             
-            <p><strong>Past:</strong> I completed my MSc in Computational Linguistics (Distinction) from <a href="https://www.wlv.ac.uk/">University of Wolverhampton</a>, and my undergraduate degree in Computer Science (1st Class, Hons) from <a href="https://www.ntu.ac.uk/">Nottingham Trent University</a>. I spent 9+ years as a Lead Software Engineer at Data Language, building production NLP systems that served major companies.</p>
+            <p><strong>Past:</strong> I completed my MSc in Computational Linguistics (Distinction) from <a href="https://www.wlv.ac.uk/">University of Wolverhampton</a>, and my undergraduate degree in Computer Science (1st Class, Hons) from <a href="https://www.ntu.ac.uk/">Nottingham Trent University</a>.</p>
         </div>
 
         <section id="publications" class="section">
             <h2>Selected Publications</h2>
+
+            <div class="publication">
+                <div class="publication-title">PATCH: Mitigating PII Leakage in Language Models with Privacy-Aware Targeted Circuit PatcHing</div>
+                <div class="publication-venue">Preprint 2025</div>
+                <div class="publication-link"><a href="https://arxiv.org/abs/2510.07452v1" target="_blank">https://arxiv.org/abs/2510.07452v1</a></div>
+            </div>
             
             <div class="publication">
                 <div class="publication-title">How Private are Language Models in Abstractive Summarisation?</div>
                 <div class="publication-venue">EMNLP 2025 - Main Proceedings</div>
                 <div class="publication-link"><a href="https://arxiv.org/abs/2412.12040" target="_blank">https://arxiv.org/abs/2412.12040</a></div>
-            </div>
-
-            <div class="publication">
-                <div class="publication-title">Understanding and Mitigating PII Leakage in Language Models: A Mechanistic Approach</div>
-                <div class="publication-venue">Under review for EACL 2026</div>
             </div>
 
             <div class="publication">
