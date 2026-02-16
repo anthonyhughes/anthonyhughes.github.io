@@ -72,6 +72,30 @@
             background: rgba(226, 232, 240, 0.3);
             padding: 0.5rem 0.75rem;
             border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            user-select: none;
+        }
+
+        h2:hover {
+            background: rgba(226, 232, 240, 0.5);
+        }
+
+        h2::after {
+            content: '▼';
+            font-size: 0.8rem;
+            color: #666;
+            transition: transform 0.2s ease;
+        }
+
+        h2.collapsed::after {
+            transform: rotate(-90deg);
+        }
+
+        .section.collapsed > *:not(h2) {
+            display: none;
         }
 
         .subtitle {
@@ -271,13 +295,16 @@
 
     <main>
         <div class="intro">
-            <p>I am pursuing my Ph.D. in Computer Science at the <a href="https://www.sheffield.ac.uk/">University of Sheffield</a>, supported by a fully-funded UKRI scholarship.</p>
+            <p>I am a Ph.D. student at the <a href="https://www.sheffield.ac.uk/">University of Sheffield</a>. This is supported by a fully-funded <a href="https://slt-cdt.sheffield.ac.uk/home">UKRI scholarship.</a>
+            <strong>Currently on leave from PhD studies as a SPAR Exec safety fellow.</strong> I'm working <a href="https://andrew-draganov.github.io/">Andrew Draganov</a> on backdoor detection in LLMs.</p>
             
-            <p><strong>Research:</strong> My PhD research investigates privacy in deep learning, focusing on how language models inadvertently leak sensitive information. I combine mechanistic interpretability with privacy research to understand and mitigate these vulnerabilities.</p>
+            <p><strong>Research:</strong> My PhD research investigates privacy in deep learning. With a particular focus on how language models inadvertently leak information, and how we mitigate this.</p>
             
-            <p><strong>Recent work:</strong> My <a href="https://arxiv.org/abs/2412.12040">EMNLP 2025 paper</a> investigates privacy leakage in abstractive summarisation. My <a href="https://arxiv.org/abs/2510.07452">EACL 2026 paper</a> (Findings), developed during a research visit with the <a href="https://crysp.uwaterloo.ca/">CrySP group</a> at the University of Waterloo, uses circuit discovery to understand and patch PII leakage in language models. I'm currently exploring how mechanistic interpretability can be extended to defend against a broader range of attack vectors.</p>
+            <p><strong>Recent work:</strong> My <a href="https://arxiv.org/abs/2412.12040">EMNLP 2025 paper</a> investigates information leakage in abstractive summarisation. My <a href="https://arxiv.org/abs/2510.07452">EACL 2026 paper</a>, uses activation patching and circuit discovery to understand and mitigate PII leakage in language models.</p>
+
             
-            <p><strong>Past:</strong> I completed my MSc in Computational Linguistics (Distinction) from <a href="https://www.wlv.ac.uk/">University of Wolverhampton</a>, and my undergraduate degree in Computer Science (1st Class, Hons) from <a href="https://www.ntu.ac.uk/">Nottingham Trent University</a>. Before returning to academia, I spent 10 years in industry as a software engineer, progressing to Lead Software Engineer and NLP Engineer roles.</p>
+            
+            <!-- <p><strong>Past:</strong> I completed my MSc in Computational Linguistics (Distinction) from <a href="https://www.wlv.ac.uk/">University of Wolverhampton</a>, and my undergraduate degree in Computer Science (1st Class, Hons) from <a href="https://www.ntu.ac.uk/">Nottingham Trent University</a>. Before returning to academia, I spent 10 years in industry as a software engineer.</p> -->
         </div>
 
         <section id="publications" class="section">
@@ -297,18 +324,19 @@
                 <div class="publication-link"><a href="https://arxiv.org/abs/2412.12040" target="_blank">https://arxiv.org/abs/2412.12040</a></div>
             </div>
 
-            <div class="publication">
+            <!-- <div class="publication">
                 <div class="publication-title">Generative Byte-Level Models for Restoring Spaces, Punctuation, and Capitalization in Multiple Languages</div>
                 <div class="publication-author">L Dyer, <b>A Hughes</b>, et al.</div>
                 <div class="publication-venue">Practical Solutions for Diverse Real-World NLP Applications 2023</div>
                 <div class="publication-link"><a href="https://link.springer.com/chapter/10.1007/978-3-031-44260-5_3" target="_blank">https://link.springer.com/chapter/10.1007/978-3-031-44260-5_3</a></div>
-            </div>
+            </div> -->
 
             <h2>Selected Publications in Health/Medicine</h2>
             <div class="publication">
                 <div class="publication-title">Large Language Models to Improve Understanding of Radiology Reports</div>
                 <div class="publication-author">S Alabed et al. including <b>A Hughes</b>.</div>
                 <div class="publication-venue">The Lancet Digital Health</div>
+                <div class="publication-link"><a href="https://authors.elsevier.com/sd/article/S2589-7500(25)00142-6" target="_blank">https://authors.elsevier.com/sd/article/S2589-7500(25)00142-6</a></div>
             </div>
             <div class="publication">
                 <div class="publication-title">Identifying and Aligning Medical Claims Made on Social Media with Medical Evidence</div>
@@ -431,5 +459,17 @@
             </div>
         </section> -->
     </main>
-</body>
+    <script>
+        // Toggle sections
+        document.addEventListener('DOMContentLoaded', function() {
+            const sectionHeaders = document.querySelectorAll('.section h2');
+            
+            sectionHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    this.classList.toggle('collapsed');
+                    this.parentElement.classList.toggle('collapsed');
+                });
+            });
+        });
+    </script></body>
 </html>
