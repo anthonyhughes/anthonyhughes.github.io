@@ -431,6 +431,7 @@
             <nav class="nav">
                 <a href="#" class="active">Home</a>
                 <a href="#publications">Publications</a>
+                <a href="#blog">Blog</a>
                 <a href="#experience">Experience</a>
                 <a href="#education">Education</a>
                 <a href="docs/anthony_hughes_cv.pdf">CV</a>
@@ -444,9 +445,9 @@
 
             <p>I'm a Ph.D. student at the <a href="https://www.sheffield.ac.uk/">University of Sheffield</a>, supported by a <a href="https://slt-cdt.sheffield.ac.uk/home">UKRI scholarship</a> and supervised by <a href="https://sheffield.ac.uk/cs/people/academic/ning-ma">Ning Ma</a> and <a href="https://nikosaletras.com/">Nikos Aletras</a>. I'm currently interning at the <a href="https://vectorinstitute.ai/">Vector Institute</a> with <a href="http://www.gautamkamath.com/">Gautam Kamath</a> and <a href="https://jimola.github.io/">Jacob Imola</a>, on unlearning in ERMs, LLMs, and related topics.</p>
 
-            <p><strong>Research:</strong> I work on the security and privacy of machine learning, focused on the relationship between a model and its training data. That spans what models leak and memorise (privacy), what adversaries can inject into them (backdoors and data poisoning), and what can be provably removed after training (unlearning).</p>
+            <p><strong>Research:</strong> I work on the security and privacy of machine learning, focused on the relationship between a model and its training data. That spans what models leak and memorise (privacy), what adversaries can inject into them (backdoors and data poisoning), and what can be provably removed after training (unlearning). The common thread is auditing: given only a trained model, what can we say — and prove — about the data that shaped it?</p>
 
-            <p><strong>Recent work:</strong> My <a href="https://arxiv.org/abs/2412.12040">EMNLP 2025 paper</a> examines information leakage in abstractive summarisation; my <a href="https://arxiv.org/abs/2510.07452">EACL 2026 paper</a> uses activation patching and circuit discovery to understand and mitigate PII leakage in language models; and most recently I've been studying membership inference attacks against <a href="https://arxiv.org/abs/2605.22373">safety classifiers</a>. As a SPAR AI safety fellow I worked with <a href="https://andrew-draganov.github.io/">Andrew Draganov</a> on backdoor detection in LLMs, covering both black- and white-box techniques. Separately, I worked on building better activation probes and on whether LLMs can evade them.</p>
+            <p><strong>Recent work:</strong> My <a href="https://arxiv.org/abs/2412.12040">EMNLP 2025 paper</a> examines information leakage in abstractive summarisation; my <a href="https://arxiv.org/abs/2510.07452">EACL 2026 paper</a> uses activation patching and circuit discovery to understand and mitigate PII leakage in language models; and most recently I've been studying membership inference attacks against <a href="https://arxiv.org/abs/2605.22373">safety classifiers</a>. As a SPAR AI safety fellow I worked with <a href="https://andrew-draganov.github.io/">Andrew Draganov</a> on backdoor detection in LLMs, covering both black- and white-box techniques — we've written up our findings in a <a href="https://www.lesswrong.com/posts/sYyZusFbabwKwLnEr/can-we-find-whether-models-have-been-backdoored">LessWrong post</a>. Separately, I worked on building better activation probes and on whether LLMs can evade them.</p>
         </div>
 
         <section id="publications" class="section">
@@ -490,7 +491,7 @@
 
             </div>
 
-            <h2>Selected Publications in Health/Medicine</h2>
+            <!-- <h2>Selected Publications in Health/Medicine</h2>
             <div class="section-content">
             <div class="publication">
                 <div class="publication-title">Large Language Models to Improve Understanding of Radiology Reports</div>
@@ -511,15 +512,32 @@
                 <div class="publication-venue">EKAW 2024</div>
                 <div class="publication-link"><a href="https://link.springer.com/chapter/10.1007/978-3-031-77792-9_16" target="_blank">https://link.springer.com/chapter/10.1007/978-3-031-77792-9_16</a></div>
             </div>
-            </div>
+            </div> -->
         </section>
 
-
-
+        <section id="blog" class="section">
+            <h2>Blog Posts</h2>
+            <div class="section-content">
+            <div class="publication">
+                <div class="publication-title">Can We Find Whether Models Have Been Backdoored?</div>
+                <div class="publication-author"><b>A Hughes</b>, A Draganov, with N Xing, A Kim, C Francel</div>
+                <div class="publication-venue">LessWrong, July 2026</div>
+                <p>Joint work with <a href="https://andrew-draganov.github.io/">Andrew Draganov</a> on whether defenders can detect implanted backdoors in LLMs and recover their trigger phrases without access to the training data. We compare black-box approaches (vocabulary sweeps, GCG-style prompt optimisation) with white-box ones (refusal-direction analysis), and introduce a Hessian-based curvature method that separates planted triggers from generic jailbreaks, recovering triggers ~42% of the time.</p>
+                <div class="publication-link"><a href="https://www.lesswrong.com/posts/sYyZusFbabwKwLnEr/can-we-find-whether-models-have-been-backdoored" target="_blank">Read the post on LessWrong</a></div>
+            </div>
+            </div>
+        </section>
 
         <section id="experience" class="section">
             <h2>Research Experience</h2>
             <div class="section-content">
+            <div class="position">
+                <div class="position-title">AI Safety Research Fellow</div>
+                <div class="company">SPAR (Supervised Program for Alignment Research)</div>
+                <div class="dates">March 2026 - June 2026</div>
+                <p>Mentor: <a href="https://andrew-draganov.github.io/">Andrew Draganov</a>. Research on detecting backdoors in LLMs — whether defenders can find implanted triggers using black- and white-box techniques, without access to the training data.</p>
+            </div>
+
             <div class="position">
                 <div class="position-title">Visiting Graduate Researcher</div>
                 <div class="company">Cryptography, Security and Privacy Group (CrySP), University of Waterloo</div>
